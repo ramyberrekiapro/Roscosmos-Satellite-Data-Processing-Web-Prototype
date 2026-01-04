@@ -1,0 +1,84 @@
+####################################
+# PYTHON
+####################################
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+
+# Virtual environments
+env/
+env311/
+.venv/
+venv/
+ENV/
+
+# Virtualenv internals
+Lib/
+Scripts/
+pyvenv.cfg
+
+####################################
+# DJANGO
+####################################
+# Database
+db.sqlite3
+db.sqlite3-journal
+
+# Django translations
+*.mo
+
+# Collected static files (if using collectstatic)
+staticfiles/
+
+####################################
+# NODE / FRONTEND
+####################################
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+####################################
+# ENV / SECRETS
+####################################
+.env
+.env.local
+.env.production
+.env.development
+
+####################################
+# IDE / EDITORS
+####################################
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+
+####################################
+# OS FILES
+####################################
+.DS_Store
+.AppleDouble
+.LSOverride
+Thumbs.db
+
+####################################
+# LOGS
+####################################
+*.log
+
+
+.coverage
+htmlcov/
+.tox/
+.pytest_cache/
+
+build/
+dist/
+*.egg-info/
+
+
+*.dll
+*.so
+*.dylib

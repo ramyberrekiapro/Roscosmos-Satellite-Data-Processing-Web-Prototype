@@ -1,0 +1,121 @@
+{% load static %}
+{% load i18n %}
+
+<!DOCTYPE html>
+{% get_current_language as LANGUAGE_CODE %}
+<html lang="{{ LANGUAGE_CODE }}">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% trans "How to Use — Satellite Data Processing" %}</title>
+
+  <link href="https://unpkg.com/tailwindcss@^1.0/dist/tailwind.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="{% static 'style.css' %}">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+
+<body>
+  <header class="mc-header">
+    <div class="mc-header-inner">
+      <div class="mc-brand">
+        <a class="mc-brand-title" href="{% url 'landing' %}">{% trans "Roscosmos Satellite Data Processing — Prototype" %}</a>
+      </div>
+      <nav class="mc-nav">
+        <a href="{% url 'landing' %}">{% trans "Home" %}</a>
+        <a href="{% url 'files:upload' %}">{% trans "Viewer" %}</a>
+        <a href="{% url 'howto' %}" class="font-bold">{% trans "How to Use" %}</a>
+
+        {% get_current_language as LANGUAGE_CODE %}
+        <form action="{% url 'set_language' %}" method="post" style="display:inline;">
+          {% csrf_token %}
+          <input type="hidden" name="next" value="{{ request.get_full_path }}">
+          {% if LANGUAGE_CODE == 'ru' %}
+            <input type="hidden" name="language" value="en">
+            <button type="submit">EN</button>
+          {% else %}
+            <input type="hidden" name="language" value="ru">
+            <button type="submit">RU</button>
+          {% endif %}
+        </form>
+      </nav>
+      <div class="mc-partners" aria-label="Partners">
+        <img class="mc-partner-logo" src="{% static 'img/Roscosmos-logo.png' %}" alt="Roscosmos">
+        <img class="mc-partner-logo" src="{% static 'img/сириус.png.jpg' %}" alt="Sirius Educational Center">
+        <img class="mc-partner-logo mc-partner-logo--zoom" src="{% static 'img/png-clipart-saint-petersburg-state-university-northern-arctic-federal-university-public-university-academic-gymnasium-at-the-st-petersburg-academy-of-sciences-others-saint-petersburg-logo-thumbnail.png' %}" alt="Saint Petersburg State University">
+      </div>
+    </div>
+  </header>
+
+<div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+  <div class="mc-panel rounded-xl p-8 sm:p-10">
+    <h1 class="text-3xl sm:text-4xl font-bold mb-6">{% trans "How to Use This Tool" %}</h1>
+    <p class="text-lg mb-8">{% trans "This guide explains what files you can upload, what properties they should have, how the viewer works, and what a composite is." %}</p>
+
+    <section class="mb-10">
+      <h2 class="text-2xl font-semibold mb-4">{% trans "Supported Files" %}</h2>
+      <ul class="list-disc pl-6 space-y-2">
+        <li>{% trans "GeoTIFF files (.tif, .tiff) with georeferencing information." %}</li>
+        <li>{% trans "Single-band or multi-band raster data (e.g., satellite imagery, elevation, thermal, multispectral)." %}</li>
+        <li>{% trans "File size: up to 200 MB per file (adjustable in settings)." %}</li>
+      </ul>
+    </section>
+
+    <section class="mb-10">
+      <h2 class="text-2xl font-semibold mb-4">{% trans "Required GeoTIFF Properties" %}</h2>
+      <ul class="list-disc pl-6 space-y-2">
+        <li>{% trans "Coordinate Reference System (CRS): must be defined (e.g., EPSG:4326, EPSG:3857, or any proj4 string)." %}</li>
+        <li>{% trans "Georeferencing: the file must contain a valid geotransform (pixel size and origin)." %}</li>
+        <li>{% trans "Data type: supported types include Byte, UInt16, Int16, Float32, etc." %}</li>
+        <li>{% trans "No corruption: the file must open correctly in GDAL." %}</li>
+      </ul>
+    </section>
+
+    <section class="mb-10">
+      <h2 class="text-2xl font-semibold mb-4">{% trans "How It Works" %}</h2>
+      <ol class="list-decimal pl-6 space-y-3">
+        <li><strong>{% trans "Upload" %}:</strong> {% trans "Upload one or more GeoTIFF files. They are stored and converted to PNG for web display." %}</li>
+        <li><strong>{% trans "View on Map" %}:</strong> {% trans "Each uploaded image appears in the list. Check a box to overlay it on the OpenLayers map in the correct geographic location." %}</li>
+        <li><strong>{% trans "Create Composite" %}:</strong> {% trans "Select two or more images and click “Create Composite” to merge them into a single raster." %}</li>
+        <li><strong>{% trans "Show Composite" %}:</strong> {% trans "After creation, a “Show composite” checkbox appears in the Tools panel. Toggle it to display/hide the merged overlay." %}</li>
+      </ol>
+    </section>
+
+    <section class="mb-10">
+      <h2 class="text-2xl font-semibold mb-4">{% trans "What Is a Composite?" %}</h2>
+      <p class="mb-4">{% trans "A composite is a merged raster created by combining two or more uploaded GeoTIFFs into one file. This is useful for:" %}</p>
+      <ul class="list-disc pl-6 space-y-2">
+        <li>{% trans "Creating mosaics from adjacent scenes." %}</li>
+        <li>{% trans "Combining different bands (e.g., RGB, multispectral)." %}</li>
+        <li>{% trans "Producing a single overlay for easier visualization." %}</li>
+      </ul>
+      <p class="mt-4">{% trans "The composite is generated using GDAL’s merge tool and converted to a PNG for web display. Its geographic extent is computed to cover all input rasters." %}</p>
+    </section>
+
+    <section class="mb-10">
+      <h2 class="text-2xl font-semibold mb-4">{% trans "Tips & Troubleshooting" %}</h2>
+      <ul class="list-disc pl-6 space-y-2">
+        <li>{% trans "If an image doesn’t display, check that it has a defined CRS and geotransform." %}</li>
+        <li>{% trans "Large files may take a few seconds to process." %}</li>
+        <li>{% trans "Composites are stored as 'Composite.tif' and 'Composite.png' in /media/composites/." %}</li>
+        <li>{% trans "Use the browser’s DevTools console to see debug logs for overlays." %}</li>
+      </ul>
+    </section>
+
+    <section>
+      <h2 class="text-2xl font-semibold mb-4">{% trans "Need Help?" %}</h2>
+      <p>{% trans "If your files don’t work, verify they open in QGIS or GDAL tools. Ensure they are not corrupted and contain valid projection information." %}</p>
+    </section>
+  </div>
+</div>
+
+<footer class="mc-footer mt-12">
+  <div class="mc-footer-inner">
+    <div class="mc-footer-title">{% trans "Roscosmos Satellite Data Processing — Web Prototype" %}</div>
+    <div class="mc-footer-meta">© {% now "Y" %} • {% trans "Developed by Mohamed Rami Berrekia" %}</div>
+  </div>
+</footer>
+
+</body>
+</html>

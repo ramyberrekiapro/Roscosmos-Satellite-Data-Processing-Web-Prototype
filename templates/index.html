@@ -1,0 +1,361 @@
+{% load static %}
+{% load i18n %}
+
+<!DOCTYPE html>
+{% get_current_language as LANGUAGE_CODE %}
+<html lang="{{ LANGUAGE_CODE }}">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% trans "Satellite Data Processing" %}</title>
+
+  <script src="https://cdn.jsdelivr.net/npm/ol@v9.0.0/dist/ol.js"></script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/ol@v9.0.0/ol.css">
+
+  <link href="https://unpkg.com/tailwindcss@^1.0/dist/tailwind.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="{% static 'style.css' %}">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+</head>
+
+<body>
+  <header class="mc-header">
+    <div class="mc-header-inner">
+      <div class="mc-brand">
+        <a class="mc-brand-title" href="{% url 'landing' %}">{% trans "Roscosmos Satellite Data Processing — Prototype" %}</a>
+      </div>
+      <nav class="mc-nav">
+        <a href="{% url 'landing' %}">{% trans "Home" %}</a>
+        <a href="{% url 'files:upload' %}">{% trans "Viewer" %}</a>
+        <a href="{% url 'howto' %}" class="font-bold">{% trans "How to Use" %}</a>
+
+        {% get_current_language as LANGUAGE_CODE %}
+        <form action="{% url 'set_language' %}" method="post" style="display:inline;">
+          {% csrf_token %}
+          <input type="hidden" name="next" value="{{ request.get_full_path }}">
+          {% if LANGUAGE_CODE == 'ru' %}
+            <input type="hidden" name="language" value="en">
+            <button type="submit">EN</button>
+          {% else %}
+            <input type="hidden" name="language" value="ru">
+            <button type="submit">RU</button>
+          {% endif %}
+        </form>
+      </nav>
+      <div class="mc-partners" aria-label="Partners">
+        <img class="mc-partner-logo" src="{% static 'img/Roscosmos-logo.png' %}" alt="Roscosmos">
+        <img class="mc-partner-logo" src="{% static 'img/сириус.png.jpg' %}" alt="Sirius Educational Center">
+        <img class="mc-partner-logo mc-partner-logo--zoom" src="{% static 'img/png-clipart-saint-petersburg-state-university-northern-arctic-federal-university-public-university-academic-gymnasium-at-the-st-petersburg-academy-of-sciences-others-saint-petersburg-logo-thumbnail.png' %}" alt="Saint Petersburg State University">
+      </div>
+    </div>
+  </header>
+
+
+  {% if successes %}
+<div class="bg-green-100 border-l-4 border-green-500 text-green-700 p-4 mb-4" role="alert">
+    <p class="font-bold">{% trans "Success:" %}</p>
+    <ul class="list-disc pl-5">
+        {% for msg in successes %}
+        <li>{{ msg }}</li>
+        {% endfor %}
+    </ul>
+</div>
+{% endif %}
+  {% if errors %}
+<div class="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 mb-4" role="alert">
+    <p class="font-bold">{% trans "Error(s) occurred:" %}</p>
+    <ul class="list-disc pl-5">
+        {% for error in errors %}
+        <li>{{ error }}</li>
+        {% endfor %}
+    </ul>
+</div>
+{% endif %}
+
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+  <div class="pt-8 pb-6">
+    <div class="mc-panel mc-accent rounded-xl p-5 sm:p-6">
+      <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+        <div>
+          <h1 class="text-2xl sm:text-3xl font-bold tracking-tight">{% trans "Mission Control Raster Viewer" %}</h1>
+          <p class="mc-muted mt-1">{% trans "Upload GeoTIFFs, auto-convert to PNG, and overlay them precisely on the map." %}</p>
+          <p class="mc-muted mt-1">{% trans "Scroll down to select your uploaded images and display them on the map." %}</p>
+
+        </div>
+        <div class="mc-muted text-sm">{% trans "Local GDAL pipeline" %} • {% trans "OpenLayers overlay" %}</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 pb-10">
+    <div class="lg:col-span-7">
+      <div id="map"></div>
+    </div>
+
+    <div class="lg:col-span-5 space-y-6">
+
+      <!-- Loading overlay -->
+<div id="loading-overlay" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
+  <div class="bg-gray-800 text-white p-6 rounded-lg shadow-xl flex items-center gap-3">
+    <div class="animate-spin w-6 h-6 border-2 border-white border-t-transparent rounded-full"></div>
+    <span>{% trans "Creating composite..." %}</span>
+  </div>
+</div>
+
+<!-- Upload -->
+      <div class="mc-panel rounded-xl p-5 sm:p-6">
+        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+          <div>
+            <p class="text-xl font-semibold">{% trans "Upload GeoTIFF" %}</p>
+            <p class="mc-muted text-sm mt-1">{% trans "Supported:" %} <span class="font-medium">.tif / .tiff</span> {% trans "(converted to PNG for display)" %}</p>
+          </div>
+
+          <form action="{% url 'files:upload' %}" method="post" enctype="multipart/form-data" class="flex items-center gap-3">
+            {% csrf_token %}
+            <div class="flex items-center gap-3">
+              {{ form.file }}
+              <button type="submit" class="mc-btn px-4 py-2 rounded-md text-white font-semibold shadow-lg">{% trans "Upload" %}</button>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <!-- Actions -->
+      <div class="mc-panel rounded-xl p-5 sm:p-6">
+        <h2 class="text-xl font-semibold mb-4">{% trans "Tools" %}</h2>
+        <p class="mc-muted text-sm mt-1">{% trans "Create a merged composite from selected overlays." %}</p>
+
+        <!-- Composite controls -->
+        <div id="show-combined" class="hidden mt-4">
+          <div class="flex items-center">
+            <input type="checkbox" id="show-composite-cb" class="mr-3">
+            <label for="show-composite-cb" class="font-semibold">{% trans "Show composite" %}</label>
+          </div>
+        </div>
+
+        <form class="convert-method mt-4">
+          {% csrf_token %}
+          <button class="mc-btn-secondary rounded-md text-white px-6 py-3 font-semibold shadow-lg w-full sm:w-auto">
+            {% trans "Create Composite" %}
+          </button>
+        </form>
+      </div>
+
+      <!-- Console -->
+      <div class="mc-panel rounded-xl p-5 sm:p-6">
+        <h2 class="text-xl font-semibold">{% trans "Console" %}</h2>
+        <p class="mc-muted text-sm mt-1">{% trans "Open DevTools to see overlay debug logs." %}</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Images -->
+<div class="container mx-auto mt-10">
+  <div class="border-2 border-gray-300 p-10">
+    <div class="flex justify-between items-center mb-4">
+      <h1 class="text-3xl">{% trans "Images" %}</h1>
+      <div class="flex gap-2">
+        <button type="button" id="select-all-btn" class="mc-btn px-3 py-1 rounded text-white font-semibold text-sm">{% trans "Select All" %}</button>
+        <button type="button" id="deselect-all-btn" class="mc-btn px-3 py-1 rounded text-white font-semibold text-sm">{% trans "Deselect All" %}</button>
+      </div>
+    </div>
+
+    {% for img in imgs %}
+  <div class="flex items-center mt-2 mc-panel rounded-lg px-4 py-3">
+    <input
+      type="checkbox"
+      value="{{ img.id }}"
+      onclick="toggleImage(this, '{% if img.png %}{{ img.png.url|escapejs }}{% else %}{{ img.img.url|escapejs }}{% endif %}', [parseFloat('{{ img.min_lon }}'), parseFloat('{{ img.min_lat }}'), parseFloat('{{ img.max_lon }}'), parseFloat('{{ img.max_lat }}')])"
+    >
+    <label class="ml-3">
+      <div class="font-semibold">{% if img.name %}{{ img.name }}{% else %}{{ img }}{% endif %}</div>
+      <div class="text-xs mc-muted">ID: {{ img.id }}</div>
+    </label>
+  </div>
+{% endfor %}
+  </div>
+</div>
+
+<script>
+
+  const MAPTILER_KEY = '{{ maptiler_key|safe }}';
+
+  const map = new ol.Map({
+    target: 'map',
+    layers: [
+      new ol.layer.Tile({
+        source: new ol.source.TileJSON({
+          url: `https://api.maptiler.com/maps/streets-v2/tiles.json?key=${MAPTILER_KEY}`,
+          tileSize: 512,
+          crossOrigin: 'anonymous'
+        })
+      })
+    ],
+    view: new ol.View({
+      center: ol.proj.fromLonLat([20, 25]),
+      zoom: 3
+    })
+  });
+
+  const layers = {};
+  let compositeInfo = null;
+
+function toggleImage(cb, url, extent) {
+    console.log('Toggle image called with:', { 
+        checked: cb.checked,
+        url: url,
+        extent: extent
+    });
+    if (cb.checked) {
+        try {
+            if (!url) {
+                throw new Error('Missing image URL');
+            }
+            if (!Array.isArray(extent) || extent.length !== 4 || extent.some((v) => !Number.isFinite(v))) {
+                throw new Error('Invalid extent: ' + JSON.stringify(extent));
+            }
+
+            console.log('Creating new image layer...');
+            const transformedExtent = ol.proj.transformExtent(
+                extent,
+                'EPSG:4326',
+                'EPSG:3857'
+            );
+            console.log('Transformed extent (3857):', transformedExtent);
+
+            const layer = new ol.layer.Image({
+                source: new ol.source.ImageStatic({
+                    url: url,
+                    projection: 'EPSG:3857',
+                    imageExtent: transformedExtent
+                })
+            });
+            console.log('Layer created, adding to map...');
+            layers[url] = layer;
+            map.addLayer(layer);
+            
+            // Fit the view to the image extent
+            console.log('Fitting view to extent...');
+            map.getView().fit(transformedExtent, {
+                padding: [50, 50, 50, 50]
+            });
+            console.log('Done.');
+        } catch (error) {
+            console.error('Error in toggleImage:', error);
+            alert('Error displaying image: ' + error.message);
+            cb.checked = false;
+        }
+    } else if (layers[url]) {
+        console.log('Removing layer:', url);
+        map.removeLayer(layers[url]);
+        delete layers[url];
+    }
+}
+function toggleComposite(cb) {
+    const key = 'composite';
+
+    if (cb.checked) {
+      if (!compositeInfo || !compositeInfo.url || !compositeInfo.extent) {
+        console.error('Composite info missing:', compositeInfo);
+        alert('Composite is not ready yet. Click "Create Composite" first.');
+        cb.checked = false;
+        return;
+      }
+
+      const transformedExtent = ol.proj.transformExtent(
+        compositeInfo.extent,
+        'EPSG:4326',
+        'EPSG:3857'
+      );
+
+      const layer = new ol.layer.Image({
+        source: new ol.source.ImageStatic({
+          url: compositeInfo.url,
+          projection: 'EPSG:3857',
+          imageExtent: transformedExtent
+        })
+      });
+
+      layers[key] = layer;
+      map.addLayer(layer);
+      map.getView().fit(transformedExtent, { padding: [50, 50, 50, 50] });
+    } else if (layers[key]) {
+      map.removeLayer(layers[key]);
+      delete layers[key];
+    }
+  }
+
+
+  $(document).on('submit', '.convert-method', function (e) {
+    e.preventDefault();
+
+    const selectedIds = $('input[type=checkbox][value]:checked')
+      .map(function () { return String(this.value || '').trim(); })
+      .get()
+      .filter(function (v) { return /^\d+$/.test(v); });
+
+    if (!selectedIds.length) {
+      alert('Select at least one image first.');
+      return;
+    }
+
+    console.log('Creating composite from IDs:', selectedIds);
+
+    // Show loading overlay and disable button
+    $('#loading-overlay').removeClass('hidden');
+    $('.convert-method button[type=submit]').prop('disabled', true).addClass('opacity-50 cursor-not-allowed');
+
+    $.ajax({
+      type: 'POST',
+      url: '{% url "files:convert" %}',
+      data: {
+        pics: selectedIds.join(','),
+        csrfmiddlewaretoken: '{{ csrf_token }}'
+      },
+      success: function (data) {
+        console.log('Composite created:', data);
+        if (data && data.png_url && data.extent) {
+          compositeInfo = { url: data.png_url, extent: data.extent };
+          $('#show-combined').removeClass('hidden');
+        } else {
+          console.error('Unexpected composite response:', data);
+          alert('Composite was created but response was missing extent/url.');
+        }
+      },
+      error: function (xhr) {
+        console.error('Composite creation failed:', xhr);
+        alert('Composite creation failed. Check DevTools console.');
+      },
+      complete: function () {
+        // Hide loading overlay and re-enable button
+        $('#loading-overlay').addClass('hidden');
+        $('.convert-method button[type=submit]').prop('disabled', false).removeClass('opacity-50 cursor-not-allowed');
+      }
+    });
+  });
+
+  $(document).on('change', '#show-composite-cb', function () {
+    toggleComposite(this);
+  });
+
+  $('#select-all-btn').on('click', function () {
+    $('input[type=checkbox][value]').prop('checked', true);
+  });
+  $('#deselect-all-btn').on('click', function () {
+    $('input[type=checkbox][value]').prop('checked', false);
+  });
+</script>
+
+<footer class="mc-footer">
+  <div class="mc-footer-inner">
+    <div class="mc-footer-title">{% trans "Roscosmos Satellite Data Processing — Web Prototype" %}</div>
+    <div class="mc-footer-meta">© {% now "Y" %} • {% trans "Developed by Mohamed Rami Berrekia" %}</div>
+  </div>
+</footer>
+
+</body>
+</html>

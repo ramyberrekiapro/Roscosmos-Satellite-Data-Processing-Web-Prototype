@@ -1,0 +1,113 @@
+<?xml version="1.0" standalone="yes"?>
+<!--http://bbp.ntsomz.ru/-->
+<!--http://ntsomz.ru/-->
+<!--http://russianspacesystems.ru/-->
+<BBPPASSPORT version="1.0.3">
+  <COMMON>
+    <DATA_PROVIDER>Research Center for Earth Operative Monitoring of JSC &quot;Russian Space Systems&quot;</DATA_PROVIDER>
+    <PRODUCTION_DATETIME>2024-03-12T07:32:33</PRODUCTION_DATETIME>
+    <FILENAME>MM22_MSUMR_20220823T114027_13101300_N3828E04330_20220824_1D.XML</FILENAME>
+    <ORDER_ID>53946538</ORDER_ID>
+  </COMMON>
+  <REFERENCE_METADATA>
+    <SCENE id="MM22_MSUMR_20220823T114027_13101300">
+      <SATELLITE>METEOR-M 2-2</SATELLITE>
+      <INSTRUMENT>MSU-MR</INSTRUMENT>
+      <SENSOR>MSU-MR</SENSOR>
+      <WKT_STRING>GEOGCS[&quot;WGS 84&quot;,DATUM[&quot;WGS_1984&quot;,SPHEROID[&quot;WGS 84&quot;,6378137,298.257223563,AUTHORITY[&quot;EPSG&quot;,&quot;7030&quot;]],AUTHORITY[&quot;EPSG&quot;,&quot;6326&quot;]],PRIMEM[&quot;Greenwich&quot;,0],UNIT[&quot;degree&quot;,0.0174532925199433],AUTHORITY[&quot;EPSG&quot;,&quot;4326&quot;]]</WKT_STRING>
+      <ACQUISITION_DATETIME>2022-08-23T11:40:27</ACQUISITION_DATETIME>
+      <CLOUD_COVER type="FINE" percentage="6.6"/>
+      <CENTER_SUN_ANGLES lon="43.51292" lat="38.468598" azimuth="78.199997" zenith="37.099998"/>
+      <CENTER_SAT_ANGLES lon="43.51292" lat="38.468598" azimuth="78.199997" zenith="14.900000"/>
+      <OVERVIEW_IMAGE>MM22_MSUMR_20220823T114027_13101300_N3828E04330_20220824_1D.png</OVERVIEW_IMAGE>
+      <QUALITY_ASSURANCE percentage="100"/>
+      <BOUNDING_SHAPE size="45">
+        <POINT index="0" lon="59.394112" lat="29.784753"/>
+        <POINT index="1" lon="58.890228" lat="34.083164"/>
+        <POINT index="2" lon="58.46097" lat="38.379353"/>
+        <POINT index="3" lon="58.11748" lat="42.672014"/>
+        <POINT index="4" lon="57.87659" lat="46.959802"/>
+        <POINT index="5" lon="57.763742" lat="51.241273"/>
+        <POINT index="6" lon="57.763585" lat="51.259059"/>
+        <POINT index="7" lon="51.859749" lat="51.230736"/>
+        <POINT index="8" lon="48.24209" lat="51.066094"/>
+        <POINT index="9" lon="45.631369" lat="50.876697"/>
+        <POINT index="10" lon="43.566245" lat="50.684189"/>
+        <POINT index="11" lon="41.825096" lat="50.492029"/>
+        <POINT index="12" lon="40.282038" lat="50.298477"/>
+        <POINT index="13" lon="38.855569" lat="50.09975"/>
+        <POINT index="14" lon="37.485781" lat="49.890682"/>
+        <POINT index="15" lon="36.122068" lat="49.66445"/>
+        <POINT index="16" lon="34.714611" lat="49.411656"/>
+        <POINT index="17" lon="33.206091" lat="49.118467"/>
+        <POINT index="18" lon="31.520168" lat="48.762914"/>
+        <POINT index="19" lon="29.540384" lat="48.306746"/>
+        <POINT index="20" lon="27.06207" lat="47.674796"/>
+        <POINT index="21" lon="23.651837" lat="46.689083"/>
+        <POINT index="22" lon="20.055422" lat="45.494598"/>
+        <POINT index="23" lon="22.903189" lat="41.620434"/>
+        <POINT index="24" lon="25.378124" lat="37.665202"/>
+        <POINT index="25" lon="27.55183" lat="33.645223"/>
+        <POINT index="26" lon="29.479425" lat="29.572886"/>
+        <POINT index="27" lon="31.203669" lat="25.457782"/>
+        <POINT index="28" lon="31.210459" lat="25.440592"/>
+        <POINT index="29" lon="35.063451" lat="26.402679"/>
+        <POINT index="30" lon="37.489753" lat="26.948075"/>
+        <POINT index="31" lon="39.276755" lat="27.319923"/>
+        <POINT index="32" lon="40.714445" lat="27.600718"/>
+        <POINT index="33" lon="41.944801" lat="27.828023"/>
+        <POINT index="34" lon="43.050236" lat="28.022038"/>
+        <POINT index="35" lon="44.085617" lat="28.195009"/>
+        <POINT index="36" lon="45.092812" lat="28.355175"/>
+        <POINT index="37" lon="46.108906" lat="28.508695"/>
+        <POINT index="38" lon="47.172399" lat="28.660743"/>
+        <POINT index="39" lon="48.329962" lat="28.81625"/>
+        <POINT index="40" lon="49.646717" lat="28.980549"/>
+        <POINT index="41" lon="51.226292" lat="29.160044"/>
+        <POINT index="42" lon="53.258674" lat="29.362894"/>
+        <POINT index="43" lon="56.166718" lat="29.598424"/>
+        <POINT index="44" lon="59.394112" lat="29.784753"/>
+      </BOUNDING_SHAPE>
+    </SCENE>
+  </REFERENCE_METADATA>
+  <PRODUCTS>
+    <PRODUCT name="TOAL">
+      <IMAGE filename="MM22_MSUMR_20220823T114027_13101300_N3828E04330_20220824_1D_TOAL1.tif" sensor_band_number="1" num_raster_bands="1">
+        <RASTER_INFO band_index="1" data_type="UINT16" fill_value="0" height="3043" max_value="1022" min_value="1" saturate_value="1023" width="4641"/>
+        <PHYSICAL_TRANSFORM gain="0.0271" offset="-0.0271" units="W/(m^2*mkm*sr)"/>
+        <PIXEL_SIZE units="deg" x="0.0085" y="0.0085"/>
+      </IMAGE>
+      <IMAGE filename="MM22_MSUMR_20220823T114027_13101300_N3828E04330_20220824_1D_TOAL2.tif" sensor_band_number="2" num_raster_bands="1">
+        <RASTER_INFO band_index="1" data_type="UINT16" fill_value="0" height="3043" max_value="1022" min_value="1" saturate_value="1023" width="4641"/>
+        <PHYSICAL_TRANSFORM gain="0.0224" offset="-0.0224" units="W/(m^2*mkm*sr)"/>
+        <PIXEL_SIZE units="deg" x="0.0085" y="0.0085"/>
+      </IMAGE>
+      <IMAGE filename="MM22_MSUMR_20220823T114027_13101300_N3828E04330_20220824_1D_TOAL3.tif" sensor_band_number="3" num_raster_bands="1">
+        <RASTER_INFO band_index="1" data_type="UINT16" fill_value="0" height="3043" max_value="1022" min_value="1" saturate_value="1023" width="4641"/>
+        <PHYSICAL_TRANSFORM gain="0.0028" offset="-0.0028" units="W/(m^2*mkm*sr)"/>
+        <PIXEL_SIZE units="deg" x="0.0085" y="0.0085"/>
+      </IMAGE>
+      <IMAGE filename="MM22_MSUMR_20220823T114027_13101300_N3828E04330_20220824_1D_TOAL4.tif" sensor_band_number="4" num_raster_bands="1">
+        <RASTER_INFO band_index="1" data_type="UINT16" fill_value="0" height="3043" max_value="1022" min_value="1" saturate_value="1023" width="4641"/>
+        <PHYSICAL_TRANSFORM type="MSU_MR_TOARAD" units="W/(m^2*mkm*sr)">
+          <PARAMETERS>150317.343750 3786.250488 0.126712 199.873291</PARAMETERS>
+        </PHYSICAL_TRANSFORM>
+        <PIXEL_SIZE units="deg" x="0.0085" y="0.0085"/>
+      </IMAGE>
+      <IMAGE filename="MM22_MSUMR_20220823T114027_13101300_N3828E04330_20220824_1D_TOAL5.tif" sensor_band_number="5" num_raster_bands="1">
+        <RASTER_INFO band_index="1" data_type="UINT16" fill_value="0" height="3043" max_value="1022" min_value="1" saturate_value="1023" width="4641"/>
+        <PHYSICAL_TRANSFORM type="MSU_MR_TOARAD" units="W/(m^2*mkm*sr)">
+          <PARAMETERS>739.543396 1307.977417 0.226027 99.673973</PARAMETERS>
+        </PHYSICAL_TRANSFORM>
+        <PIXEL_SIZE units="deg" x="0.0085" y="0.0085"/>
+      </IMAGE>
+      <IMAGE filename="MM22_MSUMR_20220823T114027_13101300_N3828E04330_20220824_1D_TOAL6.tif" sensor_band_number="6" num_raster_bands="1">
+        <RASTER_INFO band_index="1" data_type="UINT16" fill_value="0" height="3043" max_value="1022" min_value="1" saturate_value="1023" width="4641"/>
+        <PHYSICAL_TRANSFORM type="MSU_MR_TOARAD" units="W/(m^2*mkm*sr)">
+          <PARAMETERS>478.653076 1198.979370 0.217710 109.282288</PARAMETERS>
+        </PHYSICAL_TRANSFORM>
+        <PIXEL_SIZE units="deg" x="0.0085" y="0.0085"/>
+      </IMAGE>
+    </PRODUCT>
+  </PRODUCTS>
+</BBPPASSPORT>

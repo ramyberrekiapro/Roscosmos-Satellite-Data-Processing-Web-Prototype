@@ -1,0 +1,237 @@
+{% load static %}
+{% load i18n %}
+
+<!DOCTYPE html>
+{% get_current_language as LANGUAGE_CODE %}
+<html lang="{{ LANGUAGE_CODE }}">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% trans "Satellite Data Processing Prototype" %}</title>
+
+  <link href="https://unpkg.com/tailwindcss@^1.0/dist/tailwind.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="{% static 'style.css' %}">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+
+<body>
+  <header class="mc-header">
+    <div class="mc-header-inner">
+      <div class="mc-brand">
+        <a class="mc-brand-title" href="{% url 'landing' %}">{% trans "Roscosmos Satellite Data Processing — Prototype" %}</a>
+      </div>
+      <nav class="mc-nav">
+        <a href="{% url 'landing' %}">{% trans "Home" %}</a>
+        <a href="{% url 'files:upload' %}">{% trans "Viewer" %}</a>
+        <a href="{% url 'howto' %}" class="font-bold">{% trans "How to Use" %}</a>
+
+        {% get_current_language as LANGUAGE_CODE %}
+        <form action="{% url 'set_language' %}" method="post" style="display:inline;">
+          {% csrf_token %}
+          <input type="hidden" name="next" value="{{ request.get_full_path }}">
+          {% if LANGUAGE_CODE == 'ru' %}
+            <input type="hidden" name="language" value="en">
+            <button type="submit">EN</button>
+          {% else %}
+            <input type="hidden" name="language" value="ru">
+            <button type="submit">RU</button>
+          {% endif %}
+        </form>
+      </nav>
+      <div class="mc-partners" aria-label="Partners">
+        <img class="mc-partner-logo" src="{% static 'img/Roscosmos-logo.png' %}" alt="Roscosmos">
+        <img class="mc-partner-logo" src="{% static 'img/сириус.png.jpg' %}" alt="Sirius Educational Center">
+        <img class="mc-partner-logo mc-partner-logo--zoom" src="{% static 'img/png-clipart-saint-petersburg-state-university-northern-arctic-federal-university-public-university-academic-gymnasium-at-the-st-petersburg-academy-of-sciences-others-saint-petersburg-logo-thumbnail.png' %}" alt="Saint Petersburg State University">
+      </div>
+    </div>
+  </header>
+
+
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+
+    <header class="pt-10 pb-8">
+      <div class="mc-panel mc-accent rounded-xl p-6 sm:p-10">
+        <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-8">
+          <div>
+            <div class="mc-muted text-sm tracking-wide">{% trans "Prototype of a Service for Satellite Data Processing" %}</div>
+            <h1 class="text-3xl sm:text-4xl font-bold tracking-tight mt-2">
+              {% trans "Roscosmos Satellite Data Processing — Web Prototype" %}
+            </h1>
+            <p class="mc-muted mt-3 max-w-2xl">
+              {% trans "A unified online platform for georeferenced satellite imagery visualization and basic processing—directly in the browser." %}
+            </p>
+
+            <div class="mt-6 flex flex-col sm:flex-row gap-3">
+              <a href="{% url 'files:upload' %}" class="mc-btn px-6 py-3 rounded text-white font-semibold shadow-lg">{% trans "Viewer" %}</a>
+              <a href="{% url 'howto' %}" class="mc-btn-secondary px-6 py-3 rounded text-white font-semibold shadow-lg">{% trans "How to Use" %}</a>
+              <a href="#about" class="mc-panel inline-flex items-center justify-center px-5 py-3 rounded-md font-semibold" style="border: 1px solid rgba(255,255,255,0.12);">
+                {% trans "Learn More" %}
+              </a>
+            </div>
+          </div>
+
+          <div class="mc-panel rounded-xl p-6" style="border: 1px solid rgba(255,255,255,0.12);">
+            <div class="text-sm mc-muted">{% trans "Project Status" %}</div>
+            <div class="mt-1 text-2xl font-bold">{% trans "Working Prototype" %}</div>
+            <div class="mt-3 mc-muted text-sm">
+              {% trans "Upload GeoTIFF • visualize • merge rasters • export PNG." %}
+            </div>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <main class="pb-16 space-y-10">
+
+      <section id="about" class="mc-panel rounded-xl p-6 sm:p-8">
+        <h2 class="text-2xl font-bold">{% trans "About the Project" %}</h2>
+        <p class="mc-muted mt-3">
+          {% trans "This project presents a prototype of a web-based service for processing satellite imagery and remote sensing data." %}
+          {% trans "The service is designed to provide a single online platform that combines satellite data sources, interactive visualization, and basic data processing tools." %}
+        </p>
+        <p class="mc-muted mt-3">
+          {% trans "The prototype demonstrates the possibility of performing key operations with satellite imagery directly through a web interface, without the need for complex specialized software." %}
+        </p>
+      </section>
+
+      <section class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <div class="mc-panel rounded-xl p-6 sm:p-7">
+          <h3 class="text-xl font-semibold">{% trans "Partners" %}</h3>
+          <div class="mc-muted mt-3 text-sm">
+            {% trans "The project was developed in collaboration with:" %}
+          </div>
+          <div class="partner-grid mt-4">
+            <div class="partner-card">
+              <img class="partner-logo" src="{% static 'img/Roscosmos-logo.png' %}" alt="Roscosmos logo">
+              <div class="partner-name">{% trans "Roscosmos" %}</div>
+            </div>
+            <div class="partner-card">
+              <img class="partner-logo partner-logo--zoom" src="{% static 'img/сириус.png.jpg' %}" alt="Sirius Educational Center logo">
+              <div class="partner-name">{% trans "Sirius Educational Center" %}</div>
+            </div>
+            <div class="partner-card">
+              <img class="partner-logo partner-logo--zoom" src="{% static 'img/png-clipart-saint-petersburg-state-university-northern-arctic-federal-university-public-university-academic-gymnasium-at-the-st-petersburg-academy-of-sciences-others-saint-petersburg-logo-thumbnail.png' %}" alt="Saint Petersburg State University logo">
+              <div class="partner-name">{% trans "Saint Petersburg State University" %}</div>
+            </div>
+          </div>
+          <p class="mc-muted mt-3 text-sm">
+            {% trans "Academic supervision and methodological support were provided by Associate Professor Dr. Evgeny Panidi, Department of Cartography and Geoinformatics, Institute of Earth Sciences, Saint Petersburg State University." %}
+          </p>
+        </div>
+
+        <div class="mc-panel rounded-xl p-6 sm:p-7 lg:col-span-2">
+          <h3 class="text-xl font-semibold">{% trans "Problem Statement" %}</h3>
+          <p class="mc-muted mt-3">
+            {% trans "At present, access to tools for processing satellite imagery is limited:" %}
+          </p>
+          <ul class="mt-3 mc-muted" style="list-style: disc; padding-left: 1.25rem;">
+            <li>{% trans "The official website of Roscosmos lacks a built-in public service for satellite image processing." %}</li>
+            <li>{% trans "Existing online remote sensing services mainly support foreign satellite imagery." %}</li>
+            <li>{% trans "Other platforms do not provide direct access to Roscosmos satellite data." %}</li>
+          </ul>
+          <p class="mc-muted mt-3">
+            {% trans "As a result, specialists are forced to use multiple platforms or install complex desktop software to work with satellite imagery." %}
+          </p>
+        </div>
+      </section>
+
+      <section class="mc-panel rounded-xl p-6 sm:p-8">
+        <h2 class="text-2xl font-bold">{% trans "Proposed Solution" %}</h2>
+        <p class="mc-muted mt-3">
+          {% trans "The project proposes the creation of a new online service for processing satellite­s data from Roscosmos." %}
+        </p>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6">
+          <div class="mc-panel rounded-lg p-5" style="border: 1px solid rgba(255,255,255,0.12);">
+            <div class="font-semibold">{% trans "Unified access" %}</div>
+            <div class="mc-muted text-sm mt-1">{% trans "Provide unified access to satellite imagery." %}</div>
+          </div>
+          <div class="mc-panel rounded-lg p-5" style="border: 1px solid rgba(255,255,255,0.12);">
+            <div class="font-semibold">{% trans "Interactive visualization" %}</div>
+            <div class="mc-muted text-sm mt-1">{% trans "Display georeferenced raster data on interactive maps." %}</div>
+          </div>
+          <div class="mc-panel rounded-lg p-5" style="border: 1px solid rgba(255,255,255,0.12);">
+            <div class="font-semibold">{% trans "Basic processing" %}</div>
+            <div class="mc-muted text-sm mt-1">{% trans "Support key operations and merging inside the platform." %}</div>
+          </div>
+        </div>
+      </section>
+
+      <section class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <div class="mc-panel rounded-xl p-6 sm:p-8">
+          <h2 class="text-2xl font-bold">{% trans "Project Goal" %}</h2>
+          <p class="mc-muted mt-3">
+            {% trans "Create a prototype of a modern online satellite imagery processing service that integrates:" %}
+          </p>
+          <ul class="mt-3 mc-muted" style="list-style: disc; padding-left: 1.25rem;">
+            <li>{% trans "a web-based user interface," %}</li>
+            <li>{% trans "satellite image sources," %}</li>
+            <li>{% trans "and a platform with tools for data processing and analysis." %}</li>
+          </ul>
+        </div>
+
+        <div class="mc-panel rounded-xl p-6 sm:p-8">
+          <h2 class="text-2xl font-bold">{% trans "Key Features of the Prototype" %}</h2>
+          <ul class="mt-3 mc-muted" style="list-style: disc; padding-left: 1.25rem;">
+            <li>{% trans "Upload and visualization of georeferenced satellite images (GeoTIFF)" %}</li>
+            <li>{% trans "Interactive web map for displaying satellite imagery" %}</li>
+            <li>{% trans "Basic satellite image processing and raster merging" %}</li>
+            <li>{% trans "Unified platform combining data access and processing" %}</li>
+            <li>{% trans "Web-based architecture without the need for specialized local software" %}</li>
+          </ul>
+        </div>
+      </section>
+
+      <section class="mc-panel rounded-xl p-6 sm:p-8">
+        <h2 class="text-2xl font-bold">{% trans "Target Audience" %}</h2>
+        <p class="mc-muted mt-3">{% trans "The service is intended for:" %}</p>
+        <ul class="mt-3 mc-muted" style="list-style: disc; padding-left: 1.25rem;">
+          <li>{% trans "Specialists working with remote sensing (ДЗЗ) data" %}</li>
+          <li>{% trans "Researchers and analysts using satellite imagery" %}</li>
+          <li>{% trans "Students and academic users in the fields of space technologies and geoinformatics" %}</li>
+        </ul>
+        <p class="mc-muted mt-3">
+          {% trans "The platform is designed to simplify the work of specialists by providing free data search, visualization, and processing within a single web environment." %}
+        </p>
+      </section>
+
+      <section class="mc-panel rounded-xl p-6 sm:p-8">
+        <h2 class="text-2xl font-bold">{% trans "Expected Result" %}</h2>
+        <p class="mc-muted mt-3">
+          {% trans "The expected outcome of the project is a functional prototype of an online satellite imagery processing service that is:" %}
+        </p>
+        <ul class="mt-3 mc-muted" style="list-style: disc; padding-left: 1.25rem;">
+          <li>{% trans "practical and convenient to use," %}</li>
+          <li>{% trans "focused on real tasks of specialists," %}</li>
+          <li>{% trans "capable of simplifying access to satellite data and its processing on a unified platform." %}</li>
+        </ul>
+      </section>
+
+      <section class="mc-panel rounded-xl p-6 sm:p-8">
+        <h2 class="text-2xl font-bold">{% trans "Project Status" %}</h2>
+        <p class="mc-muted mt-3">
+          {% trans "This project is implemented as a working prototype. It demonstrates the technical feasibility of a web-based service for satellite data processing and serves as a foundation for further development and expansion." %}
+        </p>
+        <div class="mt-6">
+          <a href="{% url 'files:upload' %}" class="mc-btn inline-flex items-center justify-center px-5 py-3 rounded-md text-white font-semibold shadow-lg">
+            {% trans "Launch the Prototype Viewer" %}
+          </a>
+        </div>
+      </section>
+
+    </main>
+
+    <footer class="pb-10">
+      <div class="mc-footer">
+        <div class="mc-footer-inner">
+          <div class="mc-footer-title">Roscosmos Satellite Data Processing — Web Prototype</div>
+          <div class="mc-footer-meta">© {% now "Y" %} • {% trans "Developed by Mohamed Rami Berrekia" %}</div>
+        </div>
+      </div>
+    </footer>
+
+  </div>
+</body>
+</html>
