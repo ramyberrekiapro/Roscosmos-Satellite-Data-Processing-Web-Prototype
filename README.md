@@ -43,7 +43,7 @@ export GDAL_DATA=$(gdal-config --datadir)
 
 1. Clone the repository:
 ```bash
-git clone [https://github.com/ramyberrekiapro/VWebsite.git](https://github.com/ramyberrekiapro/Roscosmos-Satellite-Data-Processing-Web-Prototype/
+git clone https://github.com/ramyberrekiapro/VWebsite.git](https://github.com/ramyberrekiapro/Roscosmos-Satellite-Data-Processing-Web-Prototype/
 cd Roscosmos-Satellite-Data-Processing-Web-Prototype
 ```
 
